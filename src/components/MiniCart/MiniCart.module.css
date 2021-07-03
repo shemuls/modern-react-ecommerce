@@ -1,0 +1,13 @@
+.miniCartArea {
+  position: fixed;
+  top: 40%;
+  right: 10px;
+}
+.miniCartDesign {
+  z-index: 999;
+  background-color: white;
+  padding: 15px 20px;
+}
+.cursor {
+  cursor: pointer;
+}

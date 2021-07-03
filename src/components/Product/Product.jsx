@@ -1,15 +1,9 @@
-import {
-  faCoffee,
-  faShoppingCart,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
-
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
-export const Product = ({ products }) => {
+export const Product = ({ products, addTocartHandler }) => {
   const { name, category, price, img } = products;
-  console.log(products);
   const fullName = name;
   const shortName = fullName.split(" ").splice(0, 5).join(" ");
   const description = fullName.split(" ").splice(5).join(" ");
@@ -24,11 +18,6 @@ export const Product = ({ products }) => {
             src={img}
             alt="Vans"
           />
-          <div className="card-img-overlay d-flex justify-content-end">
-            <a href="#d" className="card-link text-danger">
-              <FontAwesomeIcon icon={faHeart} />
-            </a>
-          </div>
           <div className="card-body">
             <h4 className="card-title">{shortName}</h4>
             <h6 className="card-subtitle mb-2 text-muted">
@@ -39,10 +28,13 @@ export const Product = ({ products }) => {
               <div className="price text-success">
                 <h5 className="mt-4">${price}</h5>
               </div>
-              <a href="#d" className="btn btn-danger mt-3">
+              <button
+                className="btn btn-danger mt-3"
+                onClick={() => addTocartHandler(products)}
+              >
                 <FontAwesomeIcon className="mx-2" icon={faShoppingCart} />
                 Add to Cart
-              </a>
+              </button>
             </div>
           </div>
         </div>
