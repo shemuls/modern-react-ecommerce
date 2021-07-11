@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const [menuCollaspse, setmenuCollaspse] = useState(false);
@@ -8,13 +9,14 @@ export const Header = () => {
   const handleMenuCollaspseClose = () => {
     setmenuCollaspse(false);
   };
+
   return (
     <div className="navbar-light bg-warning">
       <div className="container">
         <nav className="navbar navbar-expand-lg ">
-          <a className="navbar-brand" href="#a">
+          <Link to="/" className="navbar-brand" href="#a">
             Navbar
-          </a>
+          </Link>
           {menuCollaspse ? (
             <button
               onClick={handleMenuCollaspseClose}
@@ -34,9 +36,12 @@ export const Header = () => {
           >
             <ul className="navbar-nav mr-auto">
               <li className="nav-item">
-                <a href="#a" className="nav-link">
+                <Link to="/" className="nav-link">
                   Home
-                </a>
+                </Link>
+                <Link to="/cart" className="nav-link">
+                  Cart
+                </Link>
               </li>
             </ul>
           </div>

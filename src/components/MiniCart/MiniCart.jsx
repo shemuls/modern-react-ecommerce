@@ -19,7 +19,6 @@ export const MiniCart = ({ cart }) => {
   };
   const closePopupHandler = () => {
     setpopup(false);
-    console.log(popup);
   };
 
   return (

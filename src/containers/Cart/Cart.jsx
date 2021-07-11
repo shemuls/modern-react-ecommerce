@@ -1,9 +1,9 @@
 import React from "react";
 
-export const Footer = () => {
+export const Cart = () => {
   return (
     <div>
-      <h2>Footer</h2>
+      <h2>My cart</h2>
     </div>
   );
 };

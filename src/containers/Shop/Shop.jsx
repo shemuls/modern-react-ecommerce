@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { MiniCart } from "../../components/MiniCart/MiniCart.jsx";
+import { addToDatabaseCart } from "../../utilities/DatabaseManager.js";
 import { Product } from "./../../components/Product/Product";
 import fakeData from "./../../fakeData/index";
+import { ModernEcommerceContext } from "./../../App";
 
 export const Shop = () => {
-  const product12 = fakeData.splice(0, 12);
-  const [products, setproducts] = useState(product12);
-  const [cart, setcart] = useState([]);
+  const [products, setproducts, cart, setcart] = useContext(
+    ModernEcommerceContext
+  );
 
   // Add to cart handler
   const addTocartHandler = (product) => {
@@ -30,8 +32,8 @@ export const Shop = () => {
     }
 
     setcart(newCart);
+    addToDatabaseCart(product.key, cartProductQuantity);
   };
-  console.log(cart);
 
   return (
     <>

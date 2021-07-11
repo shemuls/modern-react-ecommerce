@@ -1,12 +1,9 @@
 import React from "react";
-import { Shop } from "./../../containers/Shop/Shop";
 
-export const Body = () => {
+export const Body = ({ children }) => {
   return (
     <div>
-      <div className="container">
-        <Shop></Shop>
-      </div>
+      <div className="container">{children}</div>
     </div>
   );
 };
