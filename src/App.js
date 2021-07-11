@@ -5,7 +5,7 @@ import { Header } from "./components/Header/Header";
 import { Body } from "./components/Body/Body";
 import { Shop } from "./containers/Shop/Shop.jsx";
 import { Footer } from "./components/Footer/Footer";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Cart } from "./containers/Cart/Cart.jsx";
 import { createContext } from "react";
 import fakeData from "./fakeData/index";
@@ -13,7 +13,7 @@ import fakeData from "./fakeData/index";
 export const ModernEcommerceContext = createContext();
 
 function App() {
-  const product12 = fakeData.splice(0, 12);
+  const product12 = fakeData.slice(0, 12);
   const [products, setproducts] = useState(product12);
   const [cart, setcart] = useState([]);
 
@@ -26,7 +26,11 @@ function App() {
         <Body>
           <Switch>
             <Route exact path="/">
-              <Shop />
+              {products.length === 0 ? (
+                <h2 className="text-center p-5">Loading....</h2>
+              ) : (
+                <Shop />
+              )}
             </Route>
             <Route path="/cart">
               <Cart />

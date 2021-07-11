@@ -1,14 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { MiniCart } from "../../components/MiniCart/MiniCart.jsx";
-import { addToDatabaseCart } from "../../utilities/DatabaseManager.js";
+import {
+  addToDatabaseCart,
+  getDatabaseCart,
+} from "../../utilities/DatabaseManager.js";
 import { Product } from "./../../components/Product/Product";
-import fakeData from "./../../fakeData/index";
 import { ModernEcommerceContext } from "./../../App";
+import fakeData from "./../../fakeData/index";
 
 export const Shop = () => {
   const [products, setproducts, cart, setcart] = useContext(
     ModernEcommerceContext
   );
+
+  useEffect(() => {
+    const savedCart = getDatabaseCart();
+    const savedProductKeys = Object.keys(savedCart);
+
+    const getCartTotalProducts = savedProductKeys.map((singleKey) => {
+      const getCartProduct = fakeData.find((pd) => pd.key === singleKey);
+      getCartProduct.quantity = savedCart[singleKey];
+
+      return getCartProduct;
+    });
+    setcart(getCartTotalProducts);
+  }, []);
 
   // Add to cart handler
   const addTocartHandler = (product) => {
@@ -30,7 +46,6 @@ export const Shop = () => {
       product.quantity = 1;
       newCart = [...cart, product];
     }
-
     setcart(newCart);
     addToDatabaseCart(product.key, cartProductQuantity);
   };
