@@ -2,7 +2,10 @@ import React, { useContext } from "react";
 import { CartSummury } from "./../../components/CartSummury/CartSummury";
 import { ModernEcommerceContext } from "./../../App";
 import { CartItems } from "../../components/CartItems/CartItems.jsx";
-import { removeFromDatabaseCart } from "../../utilities/DatabaseManager.js";
+import {
+  removeFromDatabaseCart,
+  addToDatabaseCart,
+} from "../../utilities/DatabaseManager.js";
 
 export const Cart = () => {
   const { cart, setcart } = useContext(ModernEcommerceContext);
@@ -14,6 +17,45 @@ export const Cart = () => {
     setcart(updateCart);
     removeFromDatabaseCart(key);
   };
+
+  const increaseQuantityHandler = (key) => {
+    const currentCart = cart;
+    const sameProduct = currentCart.find(
+      (singleProduct) => singleProduct.key === key
+    );
+    let quantityCount = 1;
+    let newCart;
+    if (sameProduct) {
+      quantityCount = sameProduct.quantity + 1;
+      sameProduct.quantity = quantityCount;
+      const othersProduct = currentCart.filter(
+        (singleProduct) => singleProduct.key !== key
+      );
+      newCart = [sameProduct, ...othersProduct];
+      setcart(newCart);
+      addToDatabaseCart(key, quantityCount);
+    }
+  };
+
+  const decreaseQuantityHandler = (key) => {
+    const currentCart = cart;
+    const sameProduct = currentCart.find(
+      (singleProduct) => singleProduct.key === key
+    );
+    let quantityCount = 1;
+    let newCart;
+    if (sameProduct && sameProduct.quantity > 0) {
+      quantityCount = sameProduct.quantity + -1;
+      sameProduct.quantity = quantityCount;
+      const othersProduct = currentCart.filter(
+        (singleProduct) => singleProduct.key !== key
+      );
+      newCart = [sameProduct, ...othersProduct];
+      setcart(newCart);
+      addToDatabaseCart(key, quantityCount);
+    }
+  };
+
   return (
     <div className="row m-4">
       <div className="col-md-8">
@@ -22,6 +64,8 @@ export const Cart = () => {
             key={singleCartItem.key}
             cart={singleCartItem}
             handleRemoveCartItem={handleRemoveCartItem}
+            increaseQuantityHandler={increaseQuantityHandler}
+            decreaseQuantityHandler={decreaseQuantityHandler}
           />
         ))}
       </div>

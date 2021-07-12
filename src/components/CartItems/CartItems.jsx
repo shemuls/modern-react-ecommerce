@@ -3,7 +3,12 @@ import { StarReview } from "./StarReview";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-export const CartItems = ({ cart, handleRemoveCartItem }) => {
+export const CartItems = ({
+  cart,
+  handleRemoveCartItem,
+  increaseQuantityHandler,
+  decreaseQuantityHandler,
+}) => {
   const { key, img, name, price, star, category, quantity } = cart;
   const fullName = name;
   const shortName = fullName.split(" ").splice(0, 3).join(" ");
@@ -32,18 +37,33 @@ export const CartItems = ({ cart, handleRemoveCartItem }) => {
         </div>
         <div className="col-md-4">
           <div className="d-flex align-items-center mb-3">
-            <span className="btn btn-warning">-</span>
+            <span
+              onClick={() => decreaseQuantityHandler(key)}
+              className="btn btn-warning"
+            >
+              -
+            </span>
             <input
               style={{ width: "80px", margin: "10px" }}
               className="form-control text-center"
               type="text"
               value={quantity}
+              onChange={() => null}
             />
-            <span className="btn btn-warning">+</span>
+            <span
+              onClick={() => increaseQuantityHandler(key)}
+              className="btn btn-warning"
+            >
+              +
+            </span>
           </div>
           <div>
-            <p className="m-0">Quantity: {quantity}</p>
-            <p className="m-0">$ {price}</p>
+            <p className="m-1">Quantity: {quantity}</p>
+            <p className="m-0">
+              <strong>
+                $ {price} * {quantity}
+              </strong>
+            </p>
           </div>
         </div>
       </div>
