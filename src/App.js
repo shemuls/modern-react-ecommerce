@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Header } from "./components/Header/Header";
@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Cart } from "./containers/Cart/Cart.jsx";
 import { createContext } from "react";
 import fakeData from "./fakeData/index";
+import { getDatabaseCart } from "./utilities/DatabaseManager.js";
 
 export const ModernEcommerceContext = createContext();
 
@@ -17,9 +18,27 @@ function App() {
   const [products, setproducts] = useState(product12);
   const [cart, setcart] = useState([]);
 
+  useEffect(() => {
+    const savedCart = getDatabaseCart();
+    const savedProductKeys = Object.keys(savedCart);
+
+    const getCartTotalProducts = savedProductKeys.map((singleKey) => {
+      const getCartProduct = fakeData.find((pd) => pd.key === singleKey);
+      getCartProduct.quantity = savedCart[singleKey];
+
+      return getCartProduct;
+    });
+    setcart(getCartTotalProducts);
+  }, []);
+
   return (
     <ModernEcommerceContext.Provider
-      value={[products, setproducts, cart, setcart]}
+      value={{
+        products: products,
+        setproducts: setproducts,
+        cart: cart,
+        setcart: setcart,
+      }}
     >
       <Router>
         <Header />

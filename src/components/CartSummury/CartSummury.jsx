@@ -1,7 +1,7 @@
 import React from "react";
 
-export const CartSummury = ({ cart }) => {
-  const totalPrice = cart.reduce((prev, current) => {
+export const CartSummury = ({ cart, children }) => {
+  const totalPrice = cart.reduce((prev, current = 0) => {
     return prev + current.price * current.quantity;
   }, 0);
   const totalQuantity = cart.reduce((prev, current) => {
@@ -31,14 +31,15 @@ export const CartSummury = ({ cart }) => {
         Total qty: {totalQuantity}
       </span>
       <span className="list-group-item list-group-item-action">
-        Total Price: ${totalPrice.toFixed(2)}
+        Total Price: {totalPrice.toFixed(2)}
       </span>
       <span className="list-group-item list-group-item-action">
-        Shipping Cost: ${shippingCost}
+        Shipping Cost: {shippingCost}
       </span>
       <span className="list-group-item list-group-item-action bg-warning">
         <strong>Grand Total: {(totalPrice + shippingCost).toFixed(2)}</strong>
       </span>
+      {children}
     </div>
   );
 };

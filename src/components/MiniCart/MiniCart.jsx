@@ -6,19 +6,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import classes from "./MiniCart.module.css";
 import { CartSummury } from "../CartSummury/CartSummury.jsx";
+import { Link } from "react-router-dom";
 
 export const MiniCart = ({ cart }) => {
-  const [popup, setpopup] = useState(false);
+  const [popup, setPopup] = useState(false);
 
-  const totalQuantity = cart.reduce((prev, current) => {
+  const totalQuantity = cart.reduce((prev, current = 0) => {
     return prev + current.quantity;
   }, 0);
 
-  const showPopupHandler = () => {
-    setpopup(true);
-  };
-  const closePopupHandler = () => {
-    setpopup(false);
+  const popupHandler = () => {
+    popup ? setPopup(false) : setPopup(true);
   };
 
   return (
@@ -29,18 +27,24 @@ export const MiniCart = ({ cart }) => {
           classes.miniCartDesign
         }
       >
-        <div onClick={showPopupHandler} className={classes.cursor}>
+        <div onClick={popupHandler} className={classes.cursor}>
           <FontAwesomeIcon icon={faShoppingCart} />{" "}
           <span className="text-danger">{totalQuantity}</span>
         </div>
 
-        <div onClick={closePopupHandler} className={classes.cursor}>
+        <div onClick={popupHandler} className={classes.cursor}>
           {popup && (
             <FontAwesomeIcon className="text-danger" icon={faWindowClose} />
           )}
         </div>
       </div>
-      {popup && <CartSummury cart={cart} />}
+      {popup && (
+        <CartSummury cart={cart}>
+          <Link to="cart" className="btn btn-danger rounded-0">
+            VIEW CART
+          </Link>
+        </CartSummury>
+      )}
     </div>
   );
 };
