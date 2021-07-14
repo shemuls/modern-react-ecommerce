@@ -46,6 +46,7 @@ export const Header = () => {
             </ul>
           </div>
           <button className="ml-auto">Hi</button>
+          <Link to="/login">Login page</Link>
         </nav>
       </div>
     </div>
