@@ -13,6 +13,7 @@ import { ModernEcommerceContext } from "../../App.js";
 import { firebaseConfig } from "./firebaseConfig.js";
 import { Login } from "./Login/Login.jsx";
 import { Register } from "./Register/Register.jsx";
+import { useForm } from "react-hook-form";
 
 export const AuthArea = () => {
   const [loginPopup, setLoginPopup] = useState(true);
@@ -40,26 +41,96 @@ export const AuthArea = () => {
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then((result) => {
-        const signedUser = result.user;
+      .then((res) => {
+        const { displayName, email, photoURL } = res.user;
         setLoggedInUser({
           isSingedUser: true,
-          email: signedUser.email,
-          displayName: signedUser.displayName,
-          photoUrl: signedUser.photoURL,
+          email: email,
+          displayName: displayName,
+          photoUrl: photoURL,
           error: "",
           succes: "Logged Successfully!",
         });
-        signedUser.email && history.replace(from);
+        email && history.replace(from);
       })
       .catch((error) => {
-        const errMessage = error.errorMessage;
+        const errorMessage = error.message;
         setLoggedInUser({
           isSingedUser: false,
           email: "",
           displayName: "",
           photoUrl: "",
-          error: errMessage,
+          error: errorMessage,
+          succes: "",
+        });
+      });
+  };
+
+  // Form handling
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+  // Register form
+  const registerFormHanlder = (data) => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(data.email, data.password)
+      .then((res) => {
+        const { displayName, email, photoURL } = res.user;
+        setLoggedInUser({
+          isSingedUser: true,
+          email: email,
+          displayName: displayName,
+          photoUrl: photoURL,
+          error: "",
+          succes: "Logged Successfully!",
+        });
+        email && history.replace(from);
+
+        reset();
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setLoggedInUser({
+          isSingedUser: false,
+          email: "",
+          displayName: "",
+          photoUrl: "",
+          error: errorMessage,
+          succes: "",
+        });
+      });
+  };
+  // login form
+  const loginFormHanlder = (data) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(data.email, data.password)
+      .then((res) => {
+        const { displayName, email, photoURL } = res.user;
+        setLoggedInUser({
+          isSingedUser: true,
+          email: email,
+          displayName: displayName,
+          photoUrl: photoURL,
+          error: "",
+          succes: "Logged Successfully!",
+        });
+        email && history.replace(from);
+
+        reset();
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        setLoggedInUser({
+          isSingedUser: false,
+          email: "",
+          displayName: "",
+          photoUrl: "",
+          error: errorMessage,
           succes: "",
         });
       });
@@ -89,7 +160,23 @@ export const AuthArea = () => {
       <div className="col">
         <div className="mt-5">
           {/* login form */}
-          {loginPopup ? <Login /> : <Register />}
+          {loginPopup ? (
+            <Login
+              register={register}
+              handleSubmit={handleSubmit}
+              loginFormHanlder={loginFormHanlder}
+              errors={errors}
+              reset={reset}
+            />
+          ) : (
+            <Register
+              register={register}
+              handleSubmit={handleSubmit}
+              registerFormHanlder={registerFormHanlder}
+              errors={errors}
+              reset={reset}
+            />
+          )}
           <div className="row text-center mt-4">
             <h4>or</h4>
             <p>Login with your social media</p>
