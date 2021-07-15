@@ -36,6 +36,7 @@ export const AuthArea = () => {
     firebase.initializeApp(firebaseConfig);
   }
   const { setLoggedInUser } = useContext(ModernEcommerceContext);
+
   const loginWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase
@@ -80,6 +81,7 @@ export const AuthArea = () => {
       .createUserWithEmailAndPassword(data.email, data.password)
       .then((res) => {
         const { displayName, email, photoURL } = res.user;
+
         setLoggedInUser({
           isSingedUser: true,
           email: email,

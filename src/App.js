@@ -5,7 +5,12 @@ import { Header } from "./components/Header/Header";
 import { Body } from "./components/Body/Body";
 import { Shop } from "./containers/Shop/Shop.jsx";
 import { Footer } from "./components/Footer/Footer";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { Cart } from "./containers/Cart/Cart.jsx";
 import { createContext } from "react";
 import fakeData from "./fakeData/index";
@@ -72,6 +77,7 @@ function App() {
             </Route> */}
             <Route path="/login">
               <AuthArea />
+              {loggedInUser.email && <Redirect to="/" />}
             </Route>
             <PrivateRoute path="/shipping">
               <Shipping />

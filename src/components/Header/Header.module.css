@@ -1,0 +1,11 @@
+.navUserToggleArea {
+  position: relative;
+}
+.navUserToggle {
+  position: absolute;
+  width: 200px;
+  z-index: 99;
+  background-color: #fff;
+  right: 0px;
+  top: 120%;
+}
