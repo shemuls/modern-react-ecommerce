@@ -11,7 +11,9 @@ export const Header = () => {
   const handleMenuCollaspse = () => {
     menuCollaspse ? setmenuCollaspse(false) : setmenuCollaspse(true);
   };
-
+  window.onclick = function () {
+    setmenuCollaspse(false);
+  };
   const { loggedInUser } = useContext(ModernEcommerceContext);
 
   const [userNavToggle, setUserNavToggle] = useState(false);

@@ -4,20 +4,25 @@ import {
   faTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import firebase from "firebase/app";
 import "firebase/auth";
 
 import React, { useState, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { ModernEcommerceContext } from "../../App.js";
-import { firebaseConfig } from "./firebaseConfig.js";
 import { Login } from "./Login/Login.jsx";
 import { Register } from "./Register/Register.jsx";
 import { useForm } from "react-hook-form";
+import {
+  createUserWithEmailAndPassword,
+  firebaseInitializeApp,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "../../utilities/AuthManager/AuthManager.js";
 
 export const AuthArea = () => {
-  const [loginPopup, setLoginPopup] = useState(true);
+  firebaseInitializeApp();
 
+  const [loginPopup, setLoginPopup] = useState(true);
   const loginPopupHandler = (logReg = "login") => {
     if (logReg === "login") {
       setLoginPopup(true);
@@ -32,39 +37,14 @@ export const AuthArea = () => {
   const history = useHistory();
   const { from } = location.state || { from: { pathname: "/" } };
 
-  if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
   const { setLoggedInUser } = useContext(ModernEcommerceContext);
 
+  // Signin with google
   const loginWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((res) => {
-        const { displayName, email, photoURL } = res.user;
-        setLoggedInUser({
-          isSingedUser: true,
-          email: email,
-          displayName: displayName,
-          photoUrl: photoURL,
-          error: "",
-          succes: "Logged Successfully!",
-        });
-        email && history.replace(from);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        setLoggedInUser({
-          isSingedUser: false,
-          email: "",
-          displayName: "",
-          photoUrl: "",
-          error: errorMessage,
-          succes: "",
-        });
-      });
+    signInWithPopup().then((res) => {
+      setLoggedInUser(res);
+      res.email && history.replace(from);
+    });
   };
 
   // Form handling
@@ -74,68 +54,22 @@ export const AuthArea = () => {
     formState: { errors },
     reset,
   } = useForm();
+
   // Register form
   const registerFormHanlder = (data) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(data.email, data.password)
-      .then((res) => {
-        const { displayName, email, photoURL } = res.user;
-
-        setLoggedInUser({
-          isSingedUser: true,
-          email: email,
-          displayName: displayName,
-          photoUrl: photoURL,
-          error: "",
-          succes: "Logged Successfully!",
-        });
-        email && history.replace(from);
-
-        reset();
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        setLoggedInUser({
-          isSingedUser: false,
-          email: "",
-          displayName: "",
-          photoUrl: "",
-          error: errorMessage,
-          succes: "",
-        });
-      });
+    createUserWithEmailAndPassword(data.email, data.password).then((res) => {
+      setLoggedInUser(res);
+      res.email && history.replace(from);
+      reset();
+    });
   };
+
   // login form
   const loginFormHanlder = (data) => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(data.email, data.password)
-      .then((res) => {
-        const { displayName, email, photoURL } = res.user;
-        setLoggedInUser({
-          isSingedUser: true,
-          email: email,
-          displayName: displayName,
-          photoUrl: photoURL,
-          error: "",
-          succes: "Logged Successfully!",
-        });
-        email && history.replace(from);
-
-        reset();
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        setLoggedInUser({
-          isSingedUser: false,
-          email: "",
-          displayName: "",
-          photoUrl: "",
-          error: errorMessage,
-          succes: "",
-        });
-      });
+    signInWithEmailAndPassword(data.email, data.password).then((res) => {
+      setLoggedInUser(res);
+      reset();
+    });
   };
 
   return (

@@ -2,33 +2,17 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { ModernEcommerceContext } from "../../App.js";
 import classes from "./UserNavToggle.module.css";
-import firebase from "firebase/app";
 import "firebase/auth";
+import { signOut } from "../../utilities/AuthManager/AuthManager.js";
 
 export const UserNavToggle = () => {
   const { loggedInUser, setLoggedInUser } = useContext(ModernEcommerceContext);
   const { displayName } = loggedInUser;
 
   const logOutBtnHandle = () => {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        setLoggedInUser({
-          isSingedUser: false,
-          email: "",
-          displayName: "",
-          photoUrl: "",
-          error: "",
-          succes: "",
-        });
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        setLoggedInUser({
-          error: errorMessage,
-        });
-      });
+    signOut().then((res) => {
+      setLoggedInUser(res);
+    });
   };
 
   return (
